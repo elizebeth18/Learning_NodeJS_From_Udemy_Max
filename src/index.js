@@ -9,15 +9,26 @@ const publicDirectoryPath = path.join(__dirname, '../public')
 app.set('view engine', 'hbs')
 app.use(express.static(publicDirectoryPath))
 
-/* app.get('/help', (req, res, next) => {
-    res.send(`<h1>Help Page</h1>`)
-}); */
+app.get('/help', (req, res, next) => {
+    res.render('help', {
+        helpMessage: 'This is a help message'
+    })
+});
+
+
+app.get('/about', (req, res, next) => {
+    res.render('about', {
+        name: "Andrew"
+    })
+})
+
+
 
 app.get('/weather', (req, res, next) => {
     res.send({ forcast: "it is cloudy", temperature: "20.5 C", location: "Bangalore" })
 });
 
-app.get('', (req, res,) => {
+app.get('', (req, res, next) => {
     res.render('index', {
         title: 'Weather',
         name: 'Jilu Elizebeth'

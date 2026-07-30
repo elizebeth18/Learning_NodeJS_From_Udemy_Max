@@ -5,3 +5,7 @@ h1 {
 img {
     width: 250px;
 }
+
+p {
+    font-style: oblique;
+}
