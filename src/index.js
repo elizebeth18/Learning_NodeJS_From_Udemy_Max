@@ -4,22 +4,25 @@ const path = require('node:path');
 const express = require('express');
 
 const app = express();
+const publicDirectoryPath = path.join(__dirname, '../public')
 
-const publicDirectoryPath = path.join(__dirname,'../public');
-
-app.use(express.static(publicDirectoryPath));
+app.set('view engine', 'hbs')
+app.use(express.static(publicDirectoryPath))
 
 /* app.get('/help', (req, res, next) => {
     res.send(`<h1>Help Page</h1>`)
 }); */
 
-app.get('/weather',(req, res, next)=>{
-    res.send({forcast: "it is cloudy",temperature: "20.5 C",location: "Bangalore"})
+app.get('/weather', (req, res, next) => {
+    res.send({ forcast: "it is cloudy", temperature: "20.5 C", location: "Bangalore" })
 });
 
-/* app.get('/', (req, res, next) => {
-    res.send("Hello from express js")
-}); */
+app.get('', (req, res,) => {
+    res.render('index', {
+        title: 'Weather',
+        name: 'Jilu Elizebeth'
+    })
+});
 
 app.listen(3000, () => {
     console.log('Listen to port number 3000')
