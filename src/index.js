@@ -4,6 +4,9 @@ const path = require('node:path');
 const express = require('express');
 const hbs = require('hbs');
 
+const geocode = require('./utils/geocode');
+const forecast = require('./utils/forecast');
+
 const app = express();
 
 //Define paths for Express config
@@ -46,11 +49,42 @@ app.get('/about', (req, res, next) => {
 
 
 app.get('/weather', (req, res, next) => {
-    res.send({
-        forcast: "it is cloudy",
-        temperature: "20.5 C",
-        location: "Bangalore"
-    });
+
+    if (!req.query.address) {
+        return res.send({
+            error: "You must provide an address"
+        });
+    } else {
+        geocode(req.query.address, (error, data) => {
+            if (error) {
+                return res.send({
+                    error: "You must provide an address"
+                });
+            }
+            //console.log("data ", data);
+
+            const { longitude, latitude, location } = data;
+
+            forecast(longitude, latitude, (error, forecastData) => {
+                if (error) {
+                    return res.send({
+                        error: "You must provide an address"
+                    });;
+                }
+                //console.log("Location: ", location)
+                //console.log("Weather: ", forecastData);
+
+                res.send({
+                    forcast: forecastData,
+                    location,
+                    address: req.query.address
+                });
+            });
+        });
+
+
+    }
+
 });
 
 app.get('/help/{*splat}', (req, res) => {
@@ -62,7 +96,7 @@ app.get('/help/{*splat}', (req, res) => {
 });
 
 app.get('/{*splat}', (req, res) => {
-    res.render('404',{
+    res.render('404', {
         title: 404,
         name: 'Jilu Elizebeth',
         errorMessage: 'Page Not Found'
